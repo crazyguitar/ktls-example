@@ -17,3 +17,12 @@ end do_sendfile(.dd.test)
 checksum(.TMP_ktls): aa559b4e3523a6c931f08f4df52d58f2
 checksum(.dd.test): aa559b4e3523a6c931f08f4df52d58f2 
 ```
+
+## Reference
+
+* [djwatson/ktls](https://github.com/djwatson/ktls)
+* [ktls/afi\_ktls-tool](https://github.com/ktls/af_ktls-tool)
+* [include/uapi/linux/tls.h](https://github.com/torvalds/linux/blob/master/include/uapi/linux/tls.h)
+* [linux/Documentation/networking/tls.txt](https://github.com/torvalds/linux/blob/master/Documentation/networking/tls.txt)
+* [TLS: Linux Kernel Transport Layer Security - NetDev](https://netdevconf.org/1.2/papers/ktls.pdf)
+* [Playing with kernel TLS in Linux 4.13 and Go - Filippo.io](https://blog.filippo.io/playing-with-kernel-tls-in-linux-4-13-and-go/)
