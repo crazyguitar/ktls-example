@@ -9,6 +9,7 @@ before_install:
   - docker build -t crazyguitar/ktls-example .
 
 script:
+  - docker run crazyguitar/ktls-example /bin/sh -c "openssl ciphers 'ALL:eNULL' | grep  ECDH-ECDSA-AES128-GCM-SHA25"
   - docker run crazyguitar/ktls-example /bin/sh -c "make -C /ktls lint"
 
 after_success:
