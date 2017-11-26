@@ -1,5 +1,7 @@
 # KTLS example
 
+[![Build Status](https://travis-ci.org/crazyguitar/ktls-example.svg?branch=master)](https://travis-ci.org/crazyguitar/ktls-example)
+
 ## Prerequisite
 
 * linux 4.13 or above
