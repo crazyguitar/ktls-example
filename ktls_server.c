@@ -39,7 +39,7 @@ end:
 #define CRT_PEM "cert.pem"
 #define KEY_PEM "key.pem"
 
-static void main_server(int port)
+static void ssl_main_server(int port)
 {
 	SSL_CTX *ctx = NULL;
 	SSL *ssl = NULL;
@@ -90,7 +90,7 @@ end:
 
 int main(int argv, char* argc[])
 {
-	main_server(PORT);
+	ssl_main_server(PORT);
 
 	return 0;
 }

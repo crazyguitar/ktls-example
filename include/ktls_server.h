@@ -125,6 +125,9 @@ typedef struct {
 } EVP_AES_GCM_CTX;
 
 
+typedef int (*do_tls)(int client, char *file, SSL *ssl);
+
+
 extern void init_openssl(void);
 extern void clean_openssl(void);
 extern int load_certificates(SSL_CTX* ctx, char *cert_file, char *key_file);
@@ -138,6 +141,10 @@ extern int do_send(int client, char *file, SSL *ssl);
 extern int do_sendfile(int client, char *file, SSL* ssl);
 extern int do_splice(int client, char *file, SSL* ssl);
 extern int do_recv(int server, SSL *ssl, char *orig_file);
+
+extern void main_server(int port, char *file, int count, int enable_ktls,do_tls tls_send);
+extern void main_client(char *host, int port, char *orig_file);
+extern int main_func(int argc, char *argv[], int enable_ktls, do_tls tls_send);
 
 extern int checksum(char *file1, char *file2);
 extern SSL_CTX* init_server_ctx(void);
