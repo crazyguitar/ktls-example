@@ -98,10 +98,15 @@ end:
 
 int create_ktls_server(int port)
 {
-	int fd = -1, rc = -1, reuse = 1;
+	int rc = -1, reuse = 1;
 	struct sockaddr_in addr;
 
-	fd = socket(PF_INET, SOCK_STREAM, 0);
+	int fd = socket(PF_INET, SOCK_STREAM, 0);
+	if (fd < 0) {
+		perror("Unable to create socket");
+		goto end;
+	}
+
 	bzero(&addr, sizeof(addr));
 
 	addr.sin_family = AF_INET;
@@ -136,10 +141,10 @@ end:
 
 int create_connection(char *host, int port)
 {
-	int fd = -1, rc = -1;
+	int rc = -1;
 	struct sockaddr_in addr;
 
-	fd = socket(AF_INET, SOCK_STREAM, 0);
+	int fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (fd < 0) goto end;
 
 	bzero(&addr, sizeof(addr));
@@ -164,14 +169,14 @@ end:
 
 int do_sslwrite(int client, char *file, SSL *ssl)
 {
-	int rc = -1, fd = -1;
+	int rc = -1;
 	struct stat st;
 	clock_t start = 0, end = 0;
 	double cpu_time_used = 0.;
 
 	printf("start do_sslwrite(%s)\n", file);
 
-	fd = open(file, O_RDONLY);
+	int fd = open(file, O_RDONLY);
 	if (fd < 0) goto end;
 
 	if (fstat(fd, &st) < 0)  goto end;
@@ -213,14 +218,14 @@ end:
 
 int do_send(int client, char *file, SSL* ssl)
 {
-	int rc = -1, fd = -1;
+	int rc = -1;
 	struct stat st;
 	clock_t start = 0, end = 0;
 	double cpu_time_used = 0.;
 
 	printf("start do_send(%s)\n", file);
 
-	fd = open(file, O_RDONLY);
+	int fd = open(file, O_RDONLY);
 	if (fd < 0) goto end;
 
 	if (fstat(fd, &st) < 0)  goto end;
@@ -263,14 +268,14 @@ end:
 
 int do_sendfile(int client, char *file, SSL* ssl)
 {
-	int rc = -1, fd = -1;
+	int rc = -1;
 	struct stat st;
 	clock_t start = 0, end = 0;
 	double cpu_time_used = 0.;
 
 	printf("start do_sendfile(%s)\n", file);
 
-	fd = open(file, O_RDONLY);
+	int fd = open(file, O_RDONLY);
 	if (fd < 0) goto end;
 
 	if (fstat(fd, &st) < 0)  goto end;
@@ -419,11 +424,11 @@ end:
 
 int do_recv(int server, SSL *ssl, char *orig_file)
 {
-	int fd = -1, rc = -1;
+	int rc = -1;
 	char tmpfile[] = ".TMP_ktls";
 
 	mode_t mode = S_IRWXU | S_IRUSR | S_IROTH;
-	fd = open(tmpfile, O_WRONLY | O_CREAT | O_TRUNC, mode);
+	int fd = open(tmpfile, O_WRONLY | O_CREAT | O_TRUNC, mode);
 
 	if (fd < 0) goto end;
 

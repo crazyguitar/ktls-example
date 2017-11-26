@@ -111,12 +111,15 @@ void load_certificates(SSL_CTX* ctx, char* CertFile, char* KeyFile)
 
 void serverlet(int client, SSL* ssl)/* Serve the connection -- threadable */
 {
-	char buf[16384];
-	int sd = -1, bytes = 0;
+	int sd = -1;
 
 	if ( SSL_accept(ssl) == -1 ) {
 		ERR_print_errors_fp(stderr);
 	} else {
+
+		char buf[16384];
+		int bytes = 0;
+
 		/* recv request */
 		bytes = SSL_read(ssl, buf, sizeof(buf));
 		if (bytes < 0) {
