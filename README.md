@@ -5,6 +5,13 @@
 * linux 4.13 or above
 * openssl 1.0.x
 
+## Generate self-signed certificate
+
+```bash
+$ openssl ecparam -out key.pem -genkey -name prime256v1
+$ openssl req -x509 -new -key key.pem -out cert.pem
+```
+
 ## Run the binaries
 
 ```bash
