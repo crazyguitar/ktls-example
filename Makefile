@@ -3,26 +3,33 @@ SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 EXE = $(subst .o,,$(OBJ))
 
+SUBDIR = lib
+
 LINTER    = cppcheck
 LINTFLAGS = --enable=style -j 4
 
 REQ = openssl
+LIB = lib/libktls.a
 
-CFLAGS  += -Wall -Werror -g -O2 $(shell pkg-config --cflags $(REQ))
+CFLAGS  += -Wall -Werror -g -O2 $(shell pkg-config --cflags $(REQ)) -I./include
 LDFLAGS += $(shell pkg-config --libs $(REQ))
 
-.PHONY: all clean lint
+.PHONY: all clean lint $(SUBDIR)
 
-all: $(EXE) $(OBJ)
+
+all: $(SUBDIR) $(EXE) $(OBJ)
 
 %:%.o
-	$(CC) $< -o $@ $(LDFLAGS)
+	$(CC) -o $@ $< $(LIB) $(LDFLAGS)
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-lint: $(SRC) $(HDR)
+$(SUBDIR):
+	$(MAKE) -C $@ $(MAKECMDGOALS)
+
+lint: $(SRC) $(HDR) $(SUBDIR)
 	$(LINTER) $(LINTFLAGS) $^
 
-clean:
+clean: $(SUBDIR)
 	rm -rf $(OBJ) $(EXE)

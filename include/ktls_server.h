@@ -35,7 +35,6 @@
 #define SOL_TLS		282
 #define SOL_TCP		6
 
-
 /* TLS socket options */
 #define TLS_TX			1	/* Set transmit parameters */
 #define TCP_ULP			31
@@ -124,5 +123,21 @@ typedef struct {
 	int tls_aad_len;            /* TLS AAD length */
 	ctr128_f ctr;
 } EVP_AES_GCM_CTX;
+
+
+extern void init_openssl(void);
+extern void clean_openssl(void);
+extern int load_certificates(SSL_CTX* ctx, char *cert_file, char *key_file);
+
+extern int setup_ktls(int client, SSL *ssl);
+extern int create_ktls_server(int port);
+extern int create_connection(char *host, int port);
+
+extern int do_sendfile(int client, char *file, SSL* ssl);
+extern int do_splice(int client, char *file, SSL* ssl);
+extern int do_recv(int server, SSL *ssl, char *orig_file);
+
+extern int checksum(char *file1, char *file2);
+extern SSL_CTX* init_server_ctx(void);
 
 #endif
