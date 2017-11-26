@@ -8,9 +8,9 @@
 #define KEY_PEM "key.pem"
 
 
-static void main_server(int port, char *file)
+static void main_server(int port, char *file, int count)
 {
-	int rc = -1, server = -1;
+	int rc = -1, server = -1, i = 0;
 	SSL_CTX *ctx = NULL;
 	SSL *ssl = NULL;
 
@@ -28,7 +28,7 @@ static void main_server(int port, char *file)
 	server = create_ktls_server(port);
 	if (server < 0) goto end;
 
-	for (;;) {
+	for (i=0; i<count; i++) {
 		struct sockaddr_in addr;
 		unsigned int len = sizeof(addr);
 		int client = accept(server, (struct sockaddr*)&addr, &len);
@@ -104,6 +104,8 @@ int main(int argc, char *argv[])
 	char *file = NULL;
 	pid_t pid;
 
+	int count = 3, i = 0;
+
 	if (argc != 3) {
 		perror("usage: ./ktls_sendfile host file");
 		exit(EXIT_FAILURE);
@@ -116,9 +118,12 @@ int main(int argc, char *argv[])
 
 	if (pid == 0) {
 		sleep(3);
-		main_client(host, PORT, file);
+		for (i=0; i<count; i++) {
+			main_client(host, PORT, file);
+			sleep(1);
+		}
 	} else {
-		main_server(PORT, file);
+		main_server(PORT, file, count);
 	}
 
 	return 0;

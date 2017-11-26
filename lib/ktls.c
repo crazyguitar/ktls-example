@@ -221,7 +221,7 @@ int do_splice(int client, char *file, SSL* ssl)
 	double cpu_time_used = 0.;
 	struct stat st;
 
-	printf("start do_splide(%s)\n", file);
+	printf("start do_splice(%s)\n", file);
 
 	if(pipe(p) < 0) {
 		perror("Unable to create a pipe");
