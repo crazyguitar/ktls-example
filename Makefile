@@ -4,12 +4,18 @@ EXE = $(subst .o,,$(OBJ))
 
 REQ = openssl
 
-CFLAGS += -Wall -g
-LDFLAGS = $(shell pkg-config --libs $(REQ))
+CFLAGS  += -Wall -Werror -g -O2 $(shell pkg-config --cflags $(REQ))
+LDFLAGS += $(shell pkg-config --libs $(REQ))
 
 .PHONY: all clean
 
-all: $(EXE)
+all: $(EXE) $(OBJ)
+
+%:%.o
+	$(CC) $< -o $@ $(LDFLAGS)
+
+%.o:%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ) $(EXE)
