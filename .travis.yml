@@ -9,4 +9,4 @@ before_install:
   - docker build -t crazyguitar/ktls-example .
 
 script:
-  - make -C /ktls lint
+  - docker run crazyguitar/ktls-example /bin/sh -c "make -C /ktls lint"
