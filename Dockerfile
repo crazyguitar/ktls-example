@@ -1,8 +1,8 @@
-FROM alpine:3.6
+FROM ubuntu:16.04
 
 ENV DIRPATH /ktls
 
-RUN apk update && apk add --no-cache alpine-sdk openssl openssl-dev cppcheck
+RUN apt-get update && apt-get install -y build-essential openssl libssl-dev pkg-config cppcheck
 RUN mkdir ${DIRPATH}
 
 COPY . ${DIRPATH}

@@ -1,7 +1,6 @@
 #ifndef KTLS_EXAMPLE_H
 #define KTLS_EXAMPLE_H
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>

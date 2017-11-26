@@ -10,3 +10,9 @@ before_install:
 
 script:
   - docker run crazyguitar/ktls-example /bin/sh -c "make -C /ktls lint"
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+    docker push crazyguitar/ktls-example;
+    fi

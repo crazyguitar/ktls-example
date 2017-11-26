@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <sys/sendfile.h>
 #include <openssl/md5.h>
 
