@@ -1,3 +1,4 @@
+HDR = $(wildcard *.h)
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 EXE = $(subst .o,,$(OBJ))
@@ -20,7 +21,7 @@ all: $(EXE) $(OBJ)
 %.o:%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-lint: $(SRC)
+lint: $(SRC) $(HDR)
 	$(LINTER) $(LINTFLAGS) $^
 
 clean:
