@@ -14,7 +14,7 @@ LIB = lib/libktls.a
 CFLAGS  += -Wall -Werror -g -O2 $(shell pkg-config --cflags $(REQ)) -I./include
 LDFLAGS += $(shell pkg-config --libs $(REQ))
 
-.PHONY: all clean lint $(SUBDIR)
+.PHONY: all clean lint test $(SUBDIR)
 
 
 all: $(SUBDIR) $(EXE) $(OBJ)
@@ -30,6 +30,9 @@ $(SUBDIR):
 
 lint: $(SRC) $(HDR) $(SUBDIR)
 	$(LINTER) $(LINTFLAGS) $^
+
+test:
+	./run.sh
 
 clean: $(SUBDIR)
 	rm -rf $(OBJ) $(EXE)

@@ -160,6 +160,105 @@ end:
 
 }
 
+int do_sslwrite(int client, char *file, SSL *ssl)
+{
+	int rc = -1, fd = -1;
+	struct stat st;
+	clock_t start = 0, end = 0;
+	double cpu_time_used = 0.;
+
+	printf("start do_sslwrite(%s)\n", file);
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0) goto end;
+
+	if (fstat(fd, &st) < 0)  goto end;
+
+	off_t len = st.st_size;
+	size_t buf_size = 4096;
+	unsigned char buf[4096] = {};
+
+	start = clock();
+
+	while (len > 0) {
+		rc = read(fd, buf, buf_size);
+		if (rc < 0) {
+			perror("read file failed.");
+			goto end;
+		}
+		rc = SSL_write(ssl, buf, rc);
+		if (rc < 0) {
+			perror("SSL_write file failed.");
+			goto end;
+		}
+
+		len -= buf_size;
+	}
+
+	end = clock();
+
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+	printf("SSL_write cost time: %.02f\n", cpu_time_used);
+
+	rc = 0;
+end:
+	if (fd > 0) close(fd);
+
+	printf("end do_sslwrite(%s)\n", file);
+
+	return rc;
+}
+
+int do_send(int client, char *file, SSL* ssl)
+{
+	int rc = -1, fd = -1;
+	struct stat st;
+	clock_t start = 0, end = 0;
+	double cpu_time_used = 0.;
+
+	printf("start do_send(%s)\n", file);
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0) goto end;
+
+	if (fstat(fd, &st) < 0)  goto end;
+
+	off_t len = st.st_size;
+	size_t buf_size = 4096;
+	unsigned char buf[4096] = {};
+
+	start = clock();
+
+	while (len > 0) {
+		rc = read(fd, buf, buf_size);
+		if (rc < 0) {
+			perror("read file failed.");
+			goto end;
+		}
+		rc = send(client, buf, rc, 0);
+		if (rc < 0) {
+			perror("send file failed.");
+			goto end;
+		}
+
+		len -= buf_size;
+	}
+
+	end = clock();
+
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+	printf("send cost time: %.02f\n", cpu_time_used);
+
+	rc = 0;
+end:
+	if (fd > 0) close(fd);
+
+	printf("end do_send(%s)\n", file);
+
+	return rc;
+
+}
+
 int do_sendfile(int client, char *file, SSL* ssl)
 {
 	int rc = -1, fd = -1;
@@ -168,16 +267,6 @@ int do_sendfile(int client, char *file, SSL* ssl)
 	double cpu_time_used = 0.;
 
 	printf("start do_sendfile(%s)\n", file);
-
-	if (SSL_accept(ssl) != 1) {
-		ERR_print_errors_fp(stderr);
-		goto end;
-	}
-
-	if (setup_ktls(client, ssl) <0) {
-		ERR_print_errors_fp(stderr);
-		goto end;
-	}
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0) goto end;
@@ -192,7 +281,7 @@ int do_sendfile(int client, char *file, SSL* ssl)
 
 	while (len > 0) {
 		rc = sendfile(client, fd, &offset, buf_size);
-		if (rc < 0 ) {
+		if (rc < 0) {
 			perror("sendfile failed.");
 			goto end;
 		}

@@ -1,6 +1,3 @@
-#include <sys/sendfile.h>
-#include <openssl/md5.h>
-
 #include <ktls_server.h>
 
 #define PORT 4433
@@ -104,10 +101,10 @@ int main(int argc, char *argv[])
 	char *file = NULL;
 	pid_t pid;
 
-	int count = 3, i = 0;
+	int status, count = 3, rc = -1, i = 0;
 
 	if (argc != 3) {
-		perror("usage: ./ktls_sendfile host file");
+		perror("usage: ./ktls_splice host file");
 		exit(EXIT_FAILURE);
 	}
 
@@ -124,7 +121,11 @@ int main(int argc, char *argv[])
 		}
 	} else {
 		main_server(PORT, file, count);
+		if ((pid = wait(&status)) == -1) {
+			perror("wait error");
+			goto end;
+		}
 	}
-
-	return 0;
+end:
+	return rc;
 }

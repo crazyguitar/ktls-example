@@ -41,12 +41,7 @@ static void main_server(int port, char *file, int count)
 			goto end;
 		}
 
-		if (setup_ktls(client, ssl) <0) {
-			ERR_print_errors_fp(stderr);
-			goto end;
-		}
-
-		rc = do_sendfile(client, file, ssl);
+		rc = do_sslwrite(client, file, ssl);
 		if (rc < 0) goto loop_done;
 
 	loop_done:
@@ -105,7 +100,7 @@ int main(int argc, char *argv[])
 	int status, count = 3, rc = -1, i = 0;
 
 	if (argc != 3) {
-		perror("usage: ./ktls_sendfile host file");
+		perror("usage: ./ssl_sslwrite host file");
 		exit(EXIT_FAILURE);
 	}
 
@@ -127,7 +122,6 @@ int main(int argc, char *argv[])
 			goto end;
 		}
 	}
-	rc = 0;
 end:
 	return rc;
 }

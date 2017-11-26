@@ -13,6 +13,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 
 #include <resolv.h>
@@ -133,6 +134,8 @@ extern int setup_ktls(int client, SSL *ssl);
 extern int create_ktls_server(int port);
 extern int create_connection(char *host, int port);
 
+extern int do_sslwrite(int client, char *file, SSL *ssl);
+extern int do_send(int client, char *file, SSL *ssl);
 extern int do_sendfile(int client, char *file, SSL* ssl);
 extern int do_splice(int client, char *file, SSL* ssl);
 extern int do_recv(int server, SSL *ssl, char *orig_file);
