@@ -79,8 +79,7 @@ int setup_ktls(int client, SSL *ssl)
 	crypto_info.info.version = TLS_1_2_VERSION;
 	crypto_info.info.cipher_type = TLS_CIPHER_AES_GCM_128;
 
-
-	memcpy(crypto_info.iv, seq_number_write, TLS_CIPHER_AES_GCM_128_IV_SIZE);
+	memcpy(crypto_info.iv, iv_write + 4, TLS_CIPHER_AES_GCM_128_IV_SIZE);
 	memcpy(crypto_info.rec_seq, seq_number_write, TLS_CIPHER_AES_GCM_128_REC_SEQ_SIZE);
 	memcpy(crypto_info.key, key_write, TLS_CIPHER_AES_GCM_128_KEY_SIZE);
 	memcpy(crypto_info.salt, iv_write, TLS_CIPHER_AES_GCM_128_SALT_SIZE);
