@@ -8,6 +8,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <openssl/sha.h>
+
 #ifndef AF_ALG
 #define AF_ALG 38
 #endif
@@ -68,7 +70,21 @@ int main(int argc, char *argv[])
 	for (i = 0; i < sizeof(buf); i++) {
 		printf("%02x", (unsigned char)buf[i]);
 	}
-	printf("\n");
+	printf(" [af_alg]\n");
+
+
+	memset(buf, 0, sizeof(buf));
+
+	/* use openssl to get hash value */
+
+	if (SHA1((unsigned char *)msg, len, (unsigned char *)buf) == NULL) {
+		goto end;
+	}
+
+	for (i = 0; i < sizeof(buf); i++) {
+		printf("%02x", (unsigned char)buf[i]);
+	}
+	printf(" [openssl]\n");
 
 	rc = 0;
 end:
