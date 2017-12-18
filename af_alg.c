@@ -22,7 +22,7 @@
 int get_random_bytes(char *buf, size_t count)
 {
 	int rc = -1;
-	int fd = -1;
+	int fd;
 
 	fd = open("/dev/urandom", O_RDONLY);
 	if (fd < 0) {
@@ -36,7 +36,7 @@ int get_random_bytes(char *buf, size_t count)
 	}
 	rc = 0;
 end:
-	if (fd > 0)
+	if (fd >= 0)
 		close(fd);
 
 	return rc;
@@ -44,7 +44,7 @@ end:
 
 int create_af_alg(struct sockaddr_alg *sa, char *key_buf)
 {
-	int rc = -1, tfmfd = -1;
+	int rc = -1, tfmfd;
 
 	tfmfd = socket(AF_ALG, SOCK_SEQPACKET, 0);
 
@@ -131,7 +131,7 @@ end:
 
 int encrypt(char *plaintext, char *buf, size_t count, char *key_buf, char *iv_buf)
 {
-	int rc = -1, opfd = -1, tfmfd = -1;
+	int rc = -1, opfd = -1, tfmfd;
 
 	struct sockaddr_alg sa = {
 		.salg_family = AF_ALG,
@@ -175,7 +175,7 @@ end:
 
 int decrypt(char *ciphertext, char *buf, size_t count, char *key_buf, char *iv_buf)
 {
-	int rc = -1, opfd = -1, tfmfd = -1;
+	int rc = -1, opfd = -1, tfmfd;
 
 	struct sockaddr_alg sa = {
 		.salg_family = AF_ALG,
@@ -219,7 +219,7 @@ end:
 
 int main(int argc, char *argv[])
 {
-	int rc = -1;
+	int rc;
 	char buf[16] = {};
 	char key_buf[KEY_SIZE] = {};
 	char iv_buf[IV_SIZE] = {};
